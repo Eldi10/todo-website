@@ -1,4 +1,4 @@
-name: Build and Deploy (Vite)
+name: Build and Deploy (Vite – subfolder)
 
 on:
   push:
@@ -14,6 +14,10 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: C:\Users\kryez\M294\officialtodo
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,18 +29,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
+          cache-dependency-path: Official-To-Do/package-lock.json
 
       - name: Install dependencies
         run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Build
         run: npm run build
 
+
       - name: Upload artifact (dist)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "dist"
+          path: "C:\Users\kryez\M294\officialtodo"
 
   deploy:
     needs: build
