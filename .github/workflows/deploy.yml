@@ -1,4 +1,4 @@
-name: Deployment for Vite/Vue (subfolder)
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -14,11 +14,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-
-defaults:
-  run:
-    working-directory: officialtodo
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,24 +26,17 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: officialtodo/package-lock.json
 
-      - name: Install packages
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+      - name: Install dependencies
+        run: npm install
 
       - name: Build project
         run: npm run build
 
-
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: officialtodo/dist
+          path: dist   # Falls dein Build in einen anderen Ordner schreibt, hier anpassen
 
   deploy:
     needs: build
